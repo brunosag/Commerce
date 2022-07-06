@@ -1,3 +1,7 @@
 body {
     padding: 10px;
 }
+
+.currency {
+    width: calc(10ch + 4rem);
+}
