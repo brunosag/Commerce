@@ -9,7 +9,10 @@ from .models import User, Category, Listing
 
 
 def index(request):
-    return render(request, "auctions/index.html")
+    listings = Listing.objects.all()
+    return render(request, "auctions/index.html", {
+        "listings": listings
+    })
 
 
 def login_view(request):
@@ -76,7 +79,7 @@ def new_listing(request):
         image = request.POST["image"]
 
         # Save listing
-        listing = Listing(title=title, description=description, image=image, starting_bid=starting_bid)
+        listing = Listing(title=title, description=description, image=image, price=starting_bid)
         listing.save()
         listing.categories.set(categories)
 

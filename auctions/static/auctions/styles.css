@@ -5,3 +5,11 @@ body {
 .currency {
     width: calc(10ch + 4rem);
 }
+
+.link-listing {
+    text-decoration: none;
+}
+
+.link-listing:hover {
+    text-decoration: underline;
+}

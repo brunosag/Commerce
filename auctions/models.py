@@ -14,7 +14,7 @@ class Category(models.Model):
 class Listing(models.Model):
     title = models.CharField(max_length=64)
     description = models.CharField(max_length=512)
-    starting_bid = models.DecimalField(max_digits=9, decimal_places=2, default=None)
+    price = models.DecimalField(max_digits=9, decimal_places=2, default=None)
     categories = models.ManyToManyField(Category, blank=True, related_name="listings")
     image = models.URLField(blank=True)
 
