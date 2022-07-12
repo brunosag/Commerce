@@ -2,6 +2,10 @@ body {
     padding: 10px;
 }
 
+input, textarea {
+    max-width: 1200px;
+}
+
 .currency {
     width: calc(10ch + 4rem);
 }

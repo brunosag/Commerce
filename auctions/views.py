@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
@@ -5,7 +6,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import User, Category, Listing
+from .models import User, Category, Listing, Comment, Bid
 
 
 def index(request):
@@ -72,6 +73,7 @@ def new_listing(request):
     if request.method == "POST":
 
         # Get form information
+        user = request.user
         title = request.POST["title"]
         description = request.POST["description"]
         starting_bid = request.POST.get("starting_bid", False)
@@ -79,11 +81,57 @@ def new_listing(request):
         image = request.POST["image"]
 
         # Save listing
-        listing = Listing(title=title, description=description, image=image, price=starting_bid)
+        listing = Listing(user=user, title=title, description=description, image=image, price=starting_bid)
         listing.save()
         listing.categories.set(categories)
+
+        return HttpResponseRedirect(reverse("listing", args=[listing.id]))
 
     categories = Category.objects.all()
     return render(request, "auctions/new_listing.html", {
         "categories": categories
+    })
+
+
+def listing(request, id):
+    listing = Listing.objects.get(pk=id)
+    if request.method == "POST":
+        user = request.user
+
+        # Watchlist
+        if request.POST["form"] == "watchlist":
+            if listing in user.watchlist.all():
+                user.watchlist.remove(listing)
+            else:
+                user.watchlist.add(listing)
+
+        # Close Auction
+        if request.POST["form"] == "close_auction":
+            listing.closed = True
+            listing.save()
+
+        # Bid
+        if request.POST["form"] == "bid":
+            value = request.POST["value"]
+
+            # Validate bid
+            if (listing.bids.all() and float(value) <= float(listing.bids.last().value)) or (float(value) < float(listing.price)):
+                print("There is a bid, and value is less or equal to current price.")
+                return render(request, "auctions/listing.html", {
+                    "listing": listing,
+                    "message": "Bid must be higher than current price."
+                })
+
+            # Save bid
+            bid = Bid(user=user, listing=listing, value=value)
+            bid.save()
+
+        # Comment
+        if request.POST["form"] == "comment":
+            text = request.POST["text"]
+            comment = Comment(user=user, listing=listing, text=text)
+            comment.save()
+
+    return render(request, "auctions/listing.html", {
+        "listing": listing
     })

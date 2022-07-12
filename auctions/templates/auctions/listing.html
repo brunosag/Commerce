@@ -1,0 +1,144 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+    {% if listing.closed %}
+        <div class="d-flex justify-content-center mt-5 text-center">
+            <div>
+                <h2>This auction has been closed.</h2>
+                {% if listing.bids.last.user == user %}
+                    <p><span class="fw-semibold">You were the winner!</span> Congratulations!</p>
+                {% else %}
+                    <p>The winner was <span class="fw-semibold">{{ listing.bids.last.user }}</span>.</p>
+                {% endif %}
+            </div>
+        </div>
+    {% else %}
+        <div class="m-3 d-grid gap-4">
+            <div class="row">
+                {% if listing.image %}
+                    <div class="col-xl-5 mb-4 px-5">
+                        <img src="{{ listing.image }}" alt="{{ listing.title }}" class="img-fluid">
+                    </div>
+                {% endif %}
+                <div class="col d-grid gap-4 pe-5">
+                    <div class="row">
+                        <h2>{{ listing.title }}</h2>
+                        {% if user.is_authenticated %}
+                            <div class="d-flex gap-4 align-items-baseline">
+                                <form method="POST">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="form" value="watchlist">
+                                    <div class="d-flex">
+                                        {% if listing in user.watchlist.all %}
+                                            <button type="submit" class="btn btn-secondary btn-sm">
+                                                <i class="fa-solid fa-check"></i>
+                                                Added to watchlist
+                                            </button>
+                                        {% else %}
+                                            <button type="submit" class="btn btn-outline-secondary btn-sm">
+                                                Add to watchlist
+                                            </button>
+                                        {% endif %}
+                                    </div>
+                                </form>
+                                {% if listing.user == user %}
+                                    <a href="#" class="link-secondary" data-bs-toggle="modal" data-bs-target="#closeAuction">Close Auction</a>
+                                    <div class="modal fade" id="closeAuction" tabindex="-1" aria-labelledby="closeAuctionLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                <h5 class="modal-title" id="closeAuctionLabel">Close Auction</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    Do you really wish to close the auction? This cannot be undone.
+                                                </div>
+                                                <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                <form method="POST">
+                                                    {% csrf_token %}
+                                                    <input type="hidden" name="form" value="close_auction">
+                                                    <button type="submit" class="btn btn-primary">Close Auction</button>
+                                                </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="row d-flex">
+                        <span class="text-muted">Description:</span>
+                        <span>{{ listing.description }}</span>
+                    </div>
+                    <div class="row d-flex">
+                        <span class="text-muted">Current Price:</span>
+                        <span class="fs-2 lh-1">${% firstof listing.bids.last.value listing.price %}</span>
+                    </div>
+                    {% if user.is_authenticated %}
+                        <div class="row">
+                            <div class="ps-3 py-4 pe-5">
+                                <h3 class="fw-normal fs-4">Make a Bid</h3>
+                                {% if message %}
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        {{ message }}
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                {% endif %}
+                                <form method="POST" class="d-flex gap-2 align-items-center">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="form" value="bid">
+                                    <div class="d-flex align-items-center gap-1">
+                                        <span>$</span>
+                                        <input name="value" class="form-control currency" type="number" placeholder="{% firstof listing.bids.last.value listing.price %}" step="0.01" min="0.00" max="1000000.00" required></input>
+                                    </div>
+                                    <input type="submit" value="Bid" class="btn btn-primary">
+                                </form>
+                                <span class="mb-1 fs-7 fst-italic">
+                                    <span>{{ listing.bids.all | length }} bid(s) so far.</span>
+                                    {% if listing.bids.last.user == user %}
+                                        <span class="fw-semibold">Your bid is the current one.</span>
+                                    {% endif %}
+                                </span>
+                            </div>
+                        </div>
+                    {% endif %}
+                    <div class="row">
+                        <h3 class="fw-normal fs-4">Details</h3>
+                        <span>
+                            <span class="text-muted">Listed by: </span><span class="fw-semibold">{{ listing.user }}</span>
+                        </span>
+                        <span>
+                            <span class="text-muted">Categories: </span>
+                            {% for category in listing.categories.all %}
+                                <button class="btn btn-secondary btn-sm rounded-pill" disabled>{{ category.name }}</button>
+                            {% endfor %}
+                        </span>
+                    </div>
+                    <div class="row mt-5 d-grid gap-3">
+                        <h3 class="fw-normal fs-4">Comments ({{ listing.comments.all | length }})</h3>
+                        {% if user.is_authenticated %}
+                            <form method="POST">
+                                {% csrf_token %}
+                                <input type="hidden" name="form" value="comment">
+                                <div class="d-flex justify-content-end">
+                                    <textarea name="text" class="form-control" type="text" maxlength="128" placeholder="Add a comment..." required></textarea>
+                                    <input type="submit" class="btn btn-primary ms-2" value="Comment">
+                                </div>
+                            </form>
+                        {% endif %}
+                        {% for comment in listing.comments.all reversed %}
+                            <div class="d-grid">
+                                <span class="fw-semibold">{{ comment.user }}</span>
+                                <span>{{ comment.text }}</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}
