@@ -135,3 +135,8 @@ def listing(request, id):
     return render(request, "auctions/listing.html", {
         "listing": listing
     })
+
+
+@login_required
+def watchlist(request):
+    return render(request, "auctions/watchlist.html")
