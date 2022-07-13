@@ -2,29 +2,28 @@
 
 {% block body %}
 
-    <h2>Active Listings</h2>
-
-    {% for listing in listings reversed %}
-        {% if not listing.closed %}
-            <div class="row align-items-center justify-content-center m-3 rounded border">
-                {% if listing.image %}
-                    <div class="col-12 col-md-5 col-xl-4 col-xxl-3 p-3">
-                        <a href="#">
-                            <img src="{{ listing.image }}" alt="{{ listing.title }}" class="img-fluid">
+        <h2 class="text-center display-6 mb-3">Active Listings</h2>
+        {% for listing in listings reversed %}
+            {% if not listing.closed %}
+                <div class="row align-items-center justify-content-center m-3 rounded border p-3">
+                    {% if listing.image %}
+                        <div class="col-12 col-md-5 col-xl-4 col-xxl-3">
+                            <a href="{% url 'listing' listing.id %}">
+                                <img src="{{ listing.image }}" alt="{{ listing.title }}" class="img-fluid contain">
+                            </a>
+                        </div>
+                    {% endif %}
+                    <div class="col ps-5">
+                        <a href="{% url 'listing' listing.id %}" class="link-dark link-listing">
+                            <h3>{{ listing.title }}</h3>
                         </a>
+                        <p>
+                            <span class="fs-4">${% firstof listing.bids.last.value listing.price %}</span>
+                        </p>
+                        <p>{{ listing.description }}</p>
                     </div>
-                {% endif %}
-                <div class="col p-5">
-                    <a href="{% url 'listing' listing.id %}" class="link-dark link-listing">
-                        <h3>{{ listing.title }}</h3>
-                    </a>
-                    <p>
-                        <span class="fs-4">${% firstof listing.bids.last.value listing.price %}</span>
-                    </p>
-                    <p>{{ listing.description }}</p>
                 </div>
-            </div>
-        {% endif %}
-    {% endfor %}
+            {% endif %}
+        {% endfor %}
 
 {% endblock %}

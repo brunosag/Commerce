@@ -5,7 +5,7 @@
 {% block body %}
 
     <div class="mb-3">
-        <h2>New Listing</h2>
+        <h2 class="text-center display-6 mb-3">New Listing</h2>
     </div>
     <form method="POST">
         {% csrf_token %}
@@ -15,7 +15,7 @@
         </div>
         <div class="mb-3">
             <label for="description" class="form-label">Description</label>
-            <textarea id="description" name="description" class="form-control" type="text" maxlength="512" required></textarea>
+            <textarea id="description" name="description" class="form-control" type="text" maxlength="512" rows="3" required></textarea>
         </div>
         <div class="mb-3">
             <label for="starting_bid" class="form-label">Starting Bid</label>
@@ -28,10 +28,14 @@
             <div>
                 <label class="form-label">Categories (optional)</label>
             </div>
-            {% for category in categories %}
-                <input id="{{ category.id }}" class="btn-check" type="checkbox" value="{{ category.id }}" name="categories" autocomplete="off">
-                <label for="{{ category.id }}" class="btn btn-outline-secondary btn-sm rounded-pill">{{ category.name }}</label>
-            {% endfor %}
+            <div class="d-flex gap-2 flex-wrap">
+                {% for category in categories %}
+                    <div>
+                        <input id="{{ category.id }}" class="btn-check" type="checkbox" value="{{ category.id }}" name="categories" autocomplete="off">
+                        <label for="{{ category.id }}" class="btn btn-outline-secondary btn-sm rounded-pill">{{ category.name }}</label>
+                    </div>
+                {% endfor %}
+            </div>
         </div>
         <div class="mb-4">
             <label for="image" class="form-label">Image URL (optional)</label>

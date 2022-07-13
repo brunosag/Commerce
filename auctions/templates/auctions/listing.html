@@ -20,7 +20,7 @@
             <div class="row">
                 {% if listing.image %}
                     <div class="col-xl-5 mb-4 px-5">
-                        <img src="{{ listing.image }}" alt="{{ listing.title }}" class="img-fluid">
+                        <img src="{{ listing.image }}" alt="{{ listing.title }}" class="img-fluid contain border">
                     </div>
                 {% endif %}
                 <div class="col d-grid gap-4 pe-5">
@@ -54,7 +54,7 @@
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    Do you really wish to close the auction? This cannot be undone.
+                                                    Do you really wish to close the auction? It cannot be reopened.
                                                 </div>
                                                 <div class="modal-footer">
                                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -121,7 +121,7 @@
                             </span>
                         {% endif %}
                     </div>
-                    <div class="row mt-5 d-grid gap-3">
+                    <div class="row my-5 d-grid gap-3">
                         <h3 class="fw-normal fs-4">Comments ({{ listing.comments.all | length }})</h3>
                         {% if user.is_authenticated %}
                             <form method="POST">
@@ -134,7 +134,7 @@
                             </form>
                         {% endif %}
                         {% for comment in listing.comments.all reversed %}
-                            <div class="d-grid">
+                            <div class="d-grid bg-light rounded p-3">
                                 <span class="fw-semibold">{{ comment.user }}</span>
                                 <span>{{ comment.text }}</span>
                             </div>

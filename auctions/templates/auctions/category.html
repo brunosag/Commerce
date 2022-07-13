@@ -2,19 +2,19 @@
 
 {% block body %}
 
-    <h2>{{ category.name }}</h2>
+    <h2 class="text-center display-6 mb-3">{{ category.name }}</h2>
 
     {% for listing in category.listings.all reversed %}
         {% if not listing.closed %}
-            <div class="row align-items-center justify-content-center m-3 rounded border">
+            <div class="row align-items-center justify-content-center m-3 rounded border p-3">
                 {% if listing.image %}
-                    <div class="col-12 col-md-5 col-xl-4 col-xxl-3 p-3">
+                    <div class="col-12 col-md-5 col-xl-4 col-xxl-3">
                         <a href="#">
-                            <img src="{{ listing.image }}" alt="{{ listing.title }}" class="img-fluid">
+                            <img src="{{ listing.image }}" alt="{{ listing.title }}" class="img-fluid contain">
                         </a>
                     </div>
                 {% endif %}
-                <div class="col p-5">
+                <div class="col">
                     <a href="{% url 'listing' listing.id %}" class="link-dark link-listing">
                         <h3>{{ listing.title }}</h3>
                     </a>

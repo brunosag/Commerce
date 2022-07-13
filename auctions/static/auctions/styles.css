@@ -1,9 +1,6 @@
-body {
-    padding: 10px;
-}
-
-input, textarea {
-    max-width: 1200px;
+.sm {
+    margin: 0 auto;
+    width: min(26rem, 100%);
 }
 
 .currency {
@@ -18,9 +15,19 @@ input, textarea {
     text-decoration: underline;
 }
 
+.listing-image-container {
+    height: 800px;
+    width: 800px;
+}
+
+.contain {
+    aspect-ratio: 1 / 1;
+    object-fit: contain;
+}
+
 .category {
-    width: min(100%, 28rem);
     text-decoration: none;
+    width: 100%;
 }
 
 .category:hover span {
