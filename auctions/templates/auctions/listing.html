@@ -8,6 +8,8 @@
                 <h2>This auction has been closed.</h2>
                 {% if listing.bids.last.user == user %}
                     <p><span class="fw-semibold">You were the winner!</span> Congratulations!</p>
+                {% elif not listing.bids.all %}
+                    <p>No bids were made.</p>
                 {% else %}
                     <p>The winner was <span class="fw-semibold">{{ listing.bids.last.user }}</span>.</p>
                 {% endif %}
@@ -110,12 +112,14 @@
                         <span>
                             <span class="text-muted">Listed by: </span><span class="fw-semibold">{{ listing.user }}</span>
                         </span>
-                        <span>
-                            <span class="text-muted">Categories: </span>
-                            {% for category in listing.categories.all %}
-                                <button class="btn btn-secondary btn-sm rounded-pill" disabled>{{ category.name }}</button>
-                            {% endfor %}
-                        </span>
+                        {% if listing.categories.all %}
+                            <span>
+                                <span class="text-muted">Categories: </span>
+                                {% for category in listing.categories.all %}
+                                    <button class="btn btn-secondary btn-sm rounded-pill" disabled>{{ category.name }}</button>
+                                {% endfor %}
+                            </span>
+                        {% endif %}
                     </div>
                     <div class="row mt-5 d-grid gap-3">
                         <h3 class="fw-normal fs-4">Comments ({{ listing.comments.all | length }})</h3>
@@ -123,7 +127,7 @@
                             <form method="POST">
                                 {% csrf_token %}
                                 <input type="hidden" name="form" value="comment">
-                                <div class="d-flex justify-content-end">
+                                <div class="d-flex">
                                     <textarea name="text" class="form-control" type="text" maxlength="128" placeholder="Add a comment..." required></textarea>
                                     <input type="submit" class="btn btn-primary ms-2" value="Comment">
                                 </div>

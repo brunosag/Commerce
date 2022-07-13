@@ -140,3 +140,17 @@ def listing(request, id):
 @login_required
 def watchlist(request):
     return render(request, "auctions/watchlist.html")
+
+
+def categories(request):
+    categories = Category.objects.all()
+    return render(request, "auctions/categories.html", {
+        "categories": categories
+    })
+
+
+def category(request, url_name):
+    category = Category.objects.get(url_name=url_name)
+    return render(request, "auctions/category.html", {
+        "category": category
+    })

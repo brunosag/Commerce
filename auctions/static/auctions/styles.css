@@ -17,3 +17,20 @@ input, textarea {
 .link-listing:hover {
     text-decoration: underline;
 }
+
+.category {
+    width: min(100%, 28rem);
+    text-decoration: none;
+}
+
+.category:hover span {
+    text-decoration: underline;
+}
+
+.category-icon-container {
+    width: 3rem;
+}
+
+.category-icon {
+    font-size: 2rem;
+}

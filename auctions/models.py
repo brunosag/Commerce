@@ -8,7 +8,9 @@ class User(AbstractUser):
 
 
 class Category(models.Model):
-    name = models.CharField(max_length=16)
+    name = models.CharField(max_length=32)
+    icon = models.CharField(max_length=32, blank=True)
+    url_name = models.CharField(max_length=32, blank=True)
 
     def __str__(self):
         return self.name

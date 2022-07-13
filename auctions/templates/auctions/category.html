@@ -1,0 +1,30 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+
+    <h2>{{ category.name }}</h2>
+
+    {% for listing in category.listings.all reversed %}
+        {% if not listing.closed %}
+            <div class="row align-items-center justify-content-center m-3 rounded border">
+                {% if listing.image %}
+                    <div class="col-12 col-md-5 col-xl-4 col-xxl-3 p-3">
+                        <a href="#">
+                            <img src="{{ listing.image }}" alt="{{ listing.title }}" class="img-fluid">
+                        </a>
+                    </div>
+                {% endif %}
+                <div class="col p-5">
+                    <a href="{% url 'listing' listing.id %}" class="link-dark link-listing">
+                        <h3>{{ listing.title }}</h3>
+                    </a>
+                    <p>
+                        <span class="fs-4">${% firstof listing.bids.last.value listing.price %}</span>
+                    </p>
+                    <p>{{ listing.description }}</p>
+                </div>
+            </div>
+        {% endif %}
+    {% endfor %}
+
+{% endblock %}
