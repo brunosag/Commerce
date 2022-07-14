@@ -38,7 +38,7 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return HttpResponseRedirect(reverse("index"))
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 
 def register(request):
