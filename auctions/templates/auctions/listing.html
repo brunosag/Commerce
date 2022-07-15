@@ -1,5 +1,7 @@
 {% extends "auctions/layout.html" %}
 
+{% block title %}{{ listing.title }} - Auctions{% endblock %}
+
 {% block body %}
 
     {% if listing.closed %}
