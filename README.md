@@ -2,7 +2,7 @@
 <h1 align="center">
     <br>
     <a href="#">
-        <img src="https://user-images.githubusercontent.com/97703272/179207588-9b1a45e7-1f96-4132-888b-5726c74f2855.png" alt="Auctions" width="200">
+        <img src="https://user-images.githubusercontent.com/97703272/179854072-87eaf8ad-ce87-49bc-a02f-742c2c7599d8.png" alt="Auctions" width="200">
     </a>
     <br>
     Auctions
