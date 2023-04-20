@@ -1,24 +1,19 @@
-from django.contrib import messages
+from .models import User, Category, Listing, Comment, Bid
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
-
-from .models import User, Category, Listing, Comment, Bid
 
 
 def index(request):
     listings = Listing.objects.all()
-    return render(request, "auctions/index.html", {
-        "listings": listings
-    })
+    return render(request, "auctions/index.html", {"listings": listings})
 
 
 def login_view(request):
     if request.method == "POST":
-
         # Attempt to sign user in
         username = request.POST["username"]
         password = request.POST["password"]
@@ -29,9 +24,7 @@ def login_view(request):
             login(request, user)
             return HttpResponseRedirect(reverse("index"))
         else:
-            return render(request, "auctions/login.html", {
-                "message": "Invalid username and/or password."
-            })
+            return render(request, "auctions/login.html", {"message": "Invalid username and/or password."})
     else:
         return render(request, "auctions/login.html")
 
@@ -50,18 +43,14 @@ def register(request):
         password = request.POST["password"]
         confirmation = request.POST["confirmation"]
         if password != confirmation:
-            return render(request, "auctions/register.html", {
-                "message": "Passwords must match."
-            })
+            return render(request, "auctions/register.html", {"message": "Passwords must match."})
 
         # Attempt to create new user
         try:
             user = User.objects.create_user(username, email, password)
             user.save()
         except IntegrityError:
-            return render(request, "auctions/register.html", {
-                "message": "Username already taken."
-            })
+            return render(request, "auctions/register.html", {"message": "Username already taken."})
         login(request, user)
         return HttpResponseRedirect(reverse("index"))
     else:
@@ -71,7 +60,6 @@ def register(request):
 @login_required
 def new_listing(request):
     if request.method == "POST":
-
         # Get form information
         user = request.user
         title = request.POST["title"]
@@ -88,9 +76,7 @@ def new_listing(request):
         return HttpResponseRedirect(reverse("listing", args=[listing.id]))
 
     categories = Category.objects.all()
-    return render(request, "auctions/new_listing.html", {
-        "categories": categories
-    })
+    return render(request, "auctions/new_listing.html", {"categories": categories})
 
 
 def listing(request, id):
@@ -115,12 +101,15 @@ def listing(request, id):
             value = request.POST["value"]
 
             # Validate bid
-            if (listing.bids.all() and float(value) <= float(listing.bids.last().value)) or (float(value) < float(listing.price)):
+            if (listing.bids.all() and float(value) <= float(listing.bids.last().value)) or (
+                float(value) < float(listing.price)
+            ):
                 print("There is a bid, and value is less or equal to current price.")
-                return render(request, "auctions/listing.html", {
-                    "listing": listing,
-                    "message": "Bid must be higher than current price."
-                })
+                return render(
+                    request,
+                    "auctions/listing.html",
+                    {"listing": listing, "message": "Bid must be higher than current price."},
+                )
 
             # Save bid
             bid = Bid(user=user, listing=listing, value=value)
@@ -132,9 +121,7 @@ def listing(request, id):
             comment = Comment(user=user, listing=listing, text=text)
             comment.save()
 
-    return render(request, "auctions/listing.html", {
-        "listing": listing
-    })
+    return render(request, "auctions/listing.html", {"listing": listing})
 
 
 @login_required
@@ -144,13 +131,9 @@ def watchlist(request):
 
 def categories(request):
     categories = Category.objects.all()
-    return render(request, "auctions/categories.html", {
-        "categories": categories
-    })
+    return render(request, "auctions/categories.html", {"categories": categories})
 
 
 def category(request, url_name):
     category = Category.objects.get(url_name=url_name)
-    return render(request, "auctions/category.html", {
-        "category": category
-    })
+    return render(request, "auctions/category.html", {"category": category})

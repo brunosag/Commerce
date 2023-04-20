@@ -1,6 +1,5 @@
-from django.urls import path
-
 from . import views
+from django.urls import path
 
 urlpatterns = [
     path("", views.index, name="index"),
@@ -11,5 +10,5 @@ urlpatterns = [
     path("listings/<str:id>", views.listing, name="listing"),
     path("watchlist", views.watchlist, name="watchlist"),
     path("categories", views.categories, name="categories"),
-    path("categories/<str:url_name>", views.category, name="category")
+    path("categories/<str:url_name>", views.category, name="category"),
 ]
