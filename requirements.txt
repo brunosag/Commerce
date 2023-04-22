@@ -1,6 +1,7 @@
 dj-database-url
 django
 django-environ
+faker
 gunicorn
 psycopg2-binary
 whitenoise[brotli]

@@ -5,6 +5,7 @@ from django.db import IntegrityError
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from faker import Faker
 
 
 def index(request):
@@ -14,6 +15,25 @@ def index(request):
 
 def login_view(request):
     if request.method == "POST":
+        # Check if user logged in with demo user
+        if "demo_user" in request.POST:
+            fake = Faker()
+
+            # Generate random user info
+            username = fake.user_name()
+            email = fake.email()
+            password = fake.password()
+
+            # Register demo user
+            demo_user = User.objects.create_user(username, email, password)
+            demo_user.save()
+
+            # Log user in
+            login(request, demo_user)
+
+            # Redirect user to home page
+            return HttpResponseRedirect(reverse("index"))
+
         # Attempt to sign user in
         username = request.POST["username"]
         password = request.POST["password"]
@@ -31,7 +51,7 @@ def login_view(request):
 
 def logout_view(request):
     logout(request)
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+    return HttpResponseRedirect(request.META.get("HTTP_REFERER", "/"))
 
 
 def register(request):
