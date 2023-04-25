@@ -5,6 +5,7 @@ from django.db import IntegrityError
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
 from faker import Faker
 
 
@@ -13,6 +14,7 @@ def index(request):
     return render(request, "auctions/index.html", {"listings": listings})
 
 
+@csrf_exempt
 def login_view(request):
     if request.method == "POST":
         # Check if user logged in with demo user
